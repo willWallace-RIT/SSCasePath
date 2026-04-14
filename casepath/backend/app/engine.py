@@ -39,7 +39,44 @@ def compute_intervention_scores(profile):
         "skill_deficit": skill_deficit,
         "system_fit_gap": system_fit_gap
     }
+def recommend_intervention(profile):
+    scores = compute_intervention_scores(profile)
 
+    intervention_score = (
+        scores["urgency"] * 0.4 +
+        scores["instability"] * 0.3 +
+        scores["skill_deficit"] * 0.2 +
+        scores["system_fit_gap"] * 0.1
+    )
+
+    if intervention_score > 0.75:
+        return {
+            "type": "HANDSON_CRISIS",
+            "actions": [
+                "Emergency placement",
+                "Crisis team assignment",
+                "Immediate stabilization support"
+            ]
+        }
+
+    if intervention_score > 0.45:
+        return {
+            "type": "STRUCTURED_DEVELOPMENT",
+            "actions": [
+                "Job training program",
+                "Housing stabilization plan",
+                "Counseling referral"
+            ]
+        }
+
+    return {
+        "type": "FLEXIBLE_ACCOMMODATION",
+        "actions": [
+            "Custom case worker plan required",
+            "Non-standard housing arrangement",
+            "Adaptive support funding pool"
+        ]
+    }
 def estimate_cost(classification):
     mapping = {
         "EMERGENCY": 2000,
