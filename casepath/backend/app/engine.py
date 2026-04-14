@@ -15,7 +15,30 @@ def classify_case(profile):
     elif score >= 20:
         return "MODERATE"
     return "STABLE"
+def compute_intervention_scores(profile):
+    urgency = 0
+    instability = 0
+    skill_deficit = 0
+    system_fit_gap = profile.get("system_fit_gap", 0.5)
 
+    if profile["housing_status"] == "homeless":
+        urgency += 0.8
+        instability += 0.7
+
+    if profile["income"] == "none":
+        urgency += 0.5
+        skill_deficit += 0.3
+
+    if profile.get("mental_health_risk"):
+        urgency += 0.6
+        instability += 0.5
+
+    return {
+        "urgency": urgency,
+        "instability": instability,
+        "skill_deficit": skill_deficit,
+        "system_fit_gap": system_fit_gap
+    }
 
 def estimate_cost(classification):
     mapping = {
